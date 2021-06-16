@@ -1,0 +1,19 @@
+{
+  "name": "lcu-events",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^15.12.2",
+    "find-process": "^1.4.4",
+    "ws": "^7.4.6"
+  },
+  "devDependencies": {
+    "@types/ws": "^7.4.4"
+  }
+}

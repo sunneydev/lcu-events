@@ -1,272 +1,275 @@
 import { EventEmitter } from "stream";
 
+declare type eventUri =
+  | "/chat/v1/session"
+  | "/chat/v1/settings"
+  | "/chat/v3/blocked"
+  | "/chat/v3/errors"
+  | "/chat/v3/friends"
+  | "/chat/v3/groups"
+  | "/chat/v4/friendrequests"
+  | "/chat/v4/presences"
+  | "/chat/v5/messages"
+  | "/chat/v5/participants"
+  | "/chat/v6/conversations"
+  | "/client-config/v1/status"
+  | "/client-config/v2/config"
+  | "/client-config/v2/namespace"
+  | "/data-store/v1/install-settings"
+  | "/entitlements/v1/token"
+  | "/lol-account-verification/v1/is-verified"
+  | "/lol-active-boosts/v1/active-boosts"
+  | "/lol-catalog/v1/items"
+  | "/lol-champ-select-legacy/v1/bannable-champion-ids"
+  | "/lol-champ-select-legacy/v1/current-champion"
+  | "/lol-champ-select-legacy/v1/disabled-champion-ids"
+  | "/lol-champ-select-legacy/v1/implementation-active"
+  | "/lol-champ-select-legacy/v1/pickable-champion-ids"
+  | "/lol-champ-select-legacy/v1/pickable-skin-ids"
+  | "/lol-champ-select-legacy/v1/session"
+  | "/lol-champ-select-legacy/v1/team-boost"
+  | "/lol-champ-select/v1/all-grid-champions"
+  | "/lol-champ-select/v1/bannable-champion-ids"
+  | "/lol-champ-select/v1/current-champion"
+  | "/lol-champ-select/v1/disabled-champion-ids"
+  | "/lol-champ-select/v1/grid-champions"
+  | "/lol-champ-select/v1/muted-players"
+  | "/lol-champ-select/v1/pickable-champion-ids"
+  | "/lol-champ-select/v1/pin-drop-notification"
+  | "/lol-champ-select/v1/session"
+  | "/lol-champ-select/v1/sfx-notifications"
+  | "/lol-champ-select/v1/skin-carousel-skins"
+  | "/lol-champ-select/v1/skin-selector-info"
+  | "/lol-champ-select/v1/summoners"
+  | "/lol-champ-select/v1/team-boost"
+  | "/lol-champions/v1/inventories"
+  | "/lol-champions/v1/owned-champions-minimal"
+  | "/lol-chat/v1/blocked-players"
+  | "/lol-chat/v1/config"
+  | "/lol-chat/v1/conversations"
+  | "/lol-chat/v1/errors"
+  | "/lol-chat/v1/friend-counts"
+  | "/lol-chat/v1/friend-groups"
+  | "/lol-chat/v1/friend-requests"
+  | "/lol-chat/v1/friends"
+  | "/lol-chat/v1/me"
+  | "/lol-chat/v1/resources"
+  | "/lol-chat/v1/session"
+  | "/lol-chat/v1/settings"
+  | "/lol-clash/v1/all-tournaments"
+  | "/lol-clash/v1/checkin-allowed"
+  | "/lol-clash/v1/currentTournamentIds"
+  | "/lol-clash/v1/disabled-config"
+  | "/lol-clash/v1/enabled"
+  | "/lol-clash/v1/iconconfig"
+  | "/lol-clash/v1/invited-roster-ids"
+  | "/lol-clash/v1/player"
+  | "/lol-clash/v1/playmode-restricted"
+  | "/lol-clash/v1/ready"
+  | "/lol-clash/v1/simple-state-flags"
+  | "/lol-clash/v1/time"
+  | "/lol-clash/v1/tournament"
+  | "/lol-clash/v1/tournament-state-info"
+  | "/lol-clash/v1/tournament-summary"
+  | "/lol-clash/v1/visible"
+  | "/lol-clash/v1/voice-enabled"
+  | "/lol-clash/v2/playmode-restricted"
+  | "/lol-client-config/v3/client-config"
+  | "/lol-collections/v1/inventories"
+  | "/lol-content-targeting/v1/filters"
+  | "/lol-content-targeting/v1/protected/filters"
+  | "/lol-cosmetics/v1/inventories"
+  | "/lol-end-of-game/v1/eog-stats-block"
+  | "/lol-end-of-game/v1/gameclient-eog-stats-block"
+  | "/lol-end-of-game/v1/tft-eog-stats"
+  | "/lol-game-client-chat/v1/aas-messages"
+  | "/lol-game-client-chat/v1/buddies"
+  | "/lol-game-client-chat/v1/instant-messages"
+  | "/lol-game-client-chat/v1/party-messages"
+  | "/lol-game-queues/v1/custom"
+  | "/lol-game-queues/v1/custom-non-default"
+  | "/lol-game-queues/v1/queues"
+  | "/lol-game-settings/v1/game-settings"
+  | "/lol-game-settings/v1/input-settings"
+  | "/lol-game-settings/v1/ready"
+  | "/lol-gameflow/v1/active-patcher-lock"
+  | "/lol-gameflow/v1/availability"
+  | "/lol-gameflow/v1/battle-training"
+  | "/lol-gameflow/v1/early-exit-notifications"
+  | "/lol-gameflow/v1/gameflow-metadata"
+  | "/lol-gameflow/v1/gameflow-phase"
+  | "/lol-gameflow/v1/session"
+  | "/lol-gameflow/v1/spectate"
+  | "/lol-gameflow/v1/watch"
+  | "/lol-geoinfo/v1/whereami"
+  | "/lol-highlights/v1/config"
+  | "/lol-highlights/v1/highlights-folder-path"
+  | "/lol-honor-v2/v1/ballot"
+  | "/lol-honor-v2/v1/config"
+  | "/lol-honor-v2/v1/late-recognition"
+  | "/lol-honor-v2/v1/mutual-honor"
+  | "/lol-honor-v2/v1/profile"
+  | "/lol-honor-v2/v1/recipients"
+  | "/lol-honor-v2/v1/recognition"
+  | "/lol-honor-v2/v1/team-choices"
+  | "/lol-hovercard/v1/friend-info"
+  | "/lol-hovercard/v1/friend-info-by-summoner"
+  | "/lol-inventory/v1/initial-configuration-complete"
+  | "/lol-inventory/v1/inventory"
+  | "/lol-inventory/v1/signedInventory"
+  | "/lol-inventory/v1/signedInventoryCache"
+  | "/lol-inventory/v1/wallet"
+  | "/lol-inventory/v2/inventory"
+  | "/lol-kr-playtime-reminder/v1/message"
+  | "/lol-league-session/v1/league-session-token"
+  | "/lol-license-agreement/v1/agreements"
+  | "/lol-license-agreement/v1/all-agreements"
+  | "/lol-license-agreement/v1/serve-location"
+  | "/lol-loadouts/v1/enabled"
+  | "/lol-loadouts/v1/loadouts-ready"
+  | "/lol-loadouts/v4/loadout"
+  | "/lol-loadouts/v4/loadouts"
+  | "/lol-lobby-team-builder/champ-select/v1"
+  | "/lol-lobby-team-builder/v1/matchmaking"
+  | "/lol-lobby/v1/last-queued-lobby"
+  | "/lol-lobby/v1/lobby"
+  | "/lol-lobby/v1/parties"
+  | "/lol-lobby/v2/comms"
+  | "/lol-lobby/v2/eligibility"
+  | "/lol-lobby/v2/lobby"
+  | "/lol-lobby/v2/notifications"
+  | "/lol-lobby/v2/party-active"
+  | "/lol-login/v1/login-connection-state"
+  | "/lol-login/v1/login-data-packet"
+  | "/lol-login/v1/login-in-game-creds"
+  | "/lol-login/v1/login-platform-credentials"
+  | "/lol-login/v1/session"
+  | "/lol-login/v1/wallet"
+  | "/lol-login/v2/league-session-init-token"
+  | "/lol-loot/v1/currency-configuration"
+  | "/lol-loot/v1/enabled"
+  | "/lol-loot/v1/loot-grants"
+  | "/lol-loot/v1/player-display-categories"
+  | "/lol-loot/v1/player-loot"
+  | "/lol-loot/v1/player-loot-map"
+  | "/lol-loot/v1/ready"
+  | "/lol-loot/v1/recipes"
+  | "/lol-loot/v2/player-loot-map"
+  | "/lol-loyalty/v1/status-notification"
+  | "/lol-maps/v1/maps"
+  | "/lol-maps/v2/maps"
+  | "/lol-match-history/v1/recently-played-champions"
+  | "/lol-match-history/v2/recently-played-champions"
+  | "/lol-matchmaking/v1/ready-check"
+  | "/lol-matchmaking/v1/search"
+  | "/lol-missions/v1/missions"
+  | "/lol-missions/v1/series"
+  | "/lol-npe-tutorial-path/v1/rewards"
+  | "/lol-npe-tutorial-path/v1/settings"
+  | "/lol-npe-tutorial-path/v1/tutorials"
+  | "/lol-patch/v1/checking-enabled"
+  | "/lol-patch/v1/environment"
+  | "/lol-patch/v1/game-version"
+  | "/lol-patch/v1/notifications"
+  | "/lol-patch/v1/products"
+  | "/lol-patch/v1/status"
+  | "/lol-perks/v1/currentpage"
+  | "/lol-perks/v1/customizationlimits"
+  | "/lol-perks/v1/inventory"
+  | "/lol-perks/v1/pages"
+  | "/lol-perks/v1/perks"
+  | "/lol-perks/v1/schema-version"
+  | "/lol-perks/v1/servicesettings"
+  | "/lol-perks/v1/settings"
+  | "/lol-perks/v1/styles"
+  | "/lol-personalized-offers/v1/status"
+  | "/lol-player-behavior/v1/config"
+  | "/lol-player-preferences/v1/player-preferences-ready"
+  | "/lol-pre-end-of-game/v1/currentSequenceEvent"
+  | "/lol-premade-voice/v1/availability"
+  | "/lol-premade-voice/v1/capturedevices"
+  | "/lol-premade-voice/v1/first-experience"
+  | "/lol-premade-voice/v1/participant-records"
+  | "/lol-premade-voice/v1/settings"
+  | "/lol-publishing-content/v1/ready"
+  | "/lol-purchase-widget/v1/configuration"
+  | "/lol-ranked/v1/current-ranked-stats"
+  | "/lol-ranked/v1/eos-rewards"
+  | "/lol-ranked/v1/global-notifications"
+  | "/lol-ranked/v1/notifications"
+  | "/lol-ranked/v1/ranked-stats"
+  | "/lol-ranked/v1/signed-ranked-stats"
+  | "/lol-ranked/v1/splits-config"
+  | "/lol-regalia/v2/config"
+  | "/lol-regalia/v2/summoners"
+  | "/lol-replays/v1/configuration"
+  | "/lol-replays/v1/metadata"
+  | "/lol-replays/v1/rofls"
+  | "/lol-rewards/v1/grants"
+  | "/lol-rewards/v1/groups"
+  | "/lol-rso-auth/v1/authorization"
+  | "/lol-settings/v1/account"
+  | "/lol-settings/v1/local"
+  | "/lol-settings/v2/account"
+  | "/lol-settings/v2/local"
+  | "/lol-settings/v2/ready"
+  | "/lol-shutdown/v1/notification"
+  | "/lol-simple-dialog-messages/v1/messages"
+  | "/lol-spectator/v1/spectate"
+  | "/lol-store/v1/getStoreUrl"
+  | "/lol-store/v1/store-ready"
+  | "/lol-store/v1/wallet"
+  | "/lol-suggested-players/v1/suggested-players"
+  | "/lol-summoner/v1/current-summoner"
+  | "/lol-summoner/v1/status"
+  | "/lol-summoner/v1/summoner-requests-ready"
+  | "/lol-tastes/v1/ready"
+  | "/lol-tft/v2/tft"
+  | "/lol-token-upsell/v1/all"
+  | "/memory/v1/fe-processes-ready"
+  | "/patcher/v1/notifications"
+  | "/patcher/v1/products"
+  | "/patcher/v1/status"
+  | "/player-notifications/v1/notifications"
+  | "/plugin-manager/v1/external-plugins"
+  | "/plugin-manager/v1/status"
+  | "/process-control/v1/process"
+  | "/product-metadata/v2/products"
+  | "/product-session/v1/external-sessions"
+  | "/riot-messaging-service/v1/message"
+  | "/riot-messaging-service/v1/out-of-sync"
+  | "/riot-messaging-service/v1/session"
+  | "/riot-messaging-service/v1/state"
+  | "/riotclient/affinity"
+  | "/riotclient/get/region/locale"
+  | "/riotclient/new-args"
+  | "/riotclient/pre-shutdown/begin"
+  | "/riotclient/region-locale"
+  | "/riotclient/region-locale/request"
+  | "/riotclient/system-info/v1"
+  | "/riotclient/ux-crash-count"
+  | "/riotclient/ux-state/request"
+  | "/riotclient/v1/crash-reporting"
+  | "/riotclient/zoom-scale"
+  | "/rso-auth/v1/auth-hints"
+  | "/rso-auth/v1/session"
+  | "/rso-auth/v2/authorizations"
+  | "/sanitizer/v1/status"
+  | "/scd/v1/cookies"
+  | "/voice-chat/v1/audio-properties"
+  | "/voice-chat/v2/devices"
+  | "/voice-chat/v2/state"
+  | "/voice-chat/v3/sessions"
+  | "/voice-chat/v3/settings";
+
 declare interface LcuEvents {
-  on(event: string, listener: (message: string) => void): this;
-  on(event: "/chat/v1/session", listener: (message: string) => void): this;
-  on(event: "/chat/v1/settings", listener: (message: string) => void): this;
-  on(event: "/chat/v3/blocked", listener: (message: string) => void): this;
-  on(event: "/chat/v3/errors", listener: (message: string) => void): this;
-  on(event: "/chat/v3/friends", listener: (message: string) => void): this;
-  on(event: "/chat/v3/groups", listener: (message: string) => void): this;
-  on(event: "/chat/v4/friendrequests", listener: (message: string) => void): this;
-  on(event: "/chat/v4/presences", listener: (message: string) => void): this;
-  on(event: "/chat/v5/messages", listener: (message: string) => void): this;
-  on(event: "/chat/v5/participants", listener: (message: string) => void): this;
-  on(event: "/chat/v6/conversations", listener: (message: string) => void): this;
-  on(event: "/client-config/v1/status", listener: (message: string) => void): this;
-  on(event: "/client-config/v2/config", listener: (message: string) => void): this;
-  on(event: "/client-config/v2/namespace", listener: (message: string) => void): this;
-  on(event: "/data-store/v1/install-settings", listener: (message: string) => void): this;
-  on(event: "/entitlements/v1/token", listener: (message: string) => void): this;
-  on(event: "/lol-account-verification/v1/is-verified", listener: (message: string) => void): this;
-  on(event: "/lol-active-boosts/v1/active-boosts", listener: (message: string) => void): this;
-  on(event: "/lol-catalog/v1/items", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select-legacy/v1/bannable-champion-ids", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select-legacy/v1/current-champion", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select-legacy/v1/disabled-champion-ids", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select-legacy/v1/implementation-active", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select-legacy/v1/pickable-champion-ids", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select-legacy/v1/pickable-skin-ids", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select-legacy/v1/session", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select-legacy/v1/team-boost", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/all-grid-champions", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/bannable-champion-ids", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/current-champion", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/disabled-champion-ids", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/grid-champions", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/muted-players", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/pickable-champion-ids", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/pin-drop-notification", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/session", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/sfx-notifications", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/skin-carousel-skins", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/skin-selector-info", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/summoners", listener: (message: string) => void): this;
-  on(event: "/lol-champ-select/v1/team-boost", listener: (message: string) => void): this;
-  on(event: "/lol-champions/v1/inventories", listener: (message: string) => void): this;
-  on(event: "/lol-champions/v1/owned-champions-minimal", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/blocked-players", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/config", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/conversations", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/errors", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/friend-counts", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/friend-groups", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/friend-requests", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/friends", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/me", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/resources", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/session", listener: (message: string) => void): this;
-  on(event: "/lol-chat/v1/settings", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/all-tournaments", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/checkin-allowed", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/currentTournamentIds", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/disabled-config", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/enabled", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/iconconfig", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/invited-roster-ids", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/player", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/playmode-restricted", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/ready", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/simple-state-flags", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/time", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/tournament", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/tournament-state-info", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/tournament-summary", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/visible", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v1/voice-enabled", listener: (message: string) => void): this;
-  on(event: "/lol-clash/v2/playmode-restricted", listener: (message: string) => void): this;
-  on(event: "/lol-client-config/v3/client-config", listener: (message: string) => void): this;
-  on(event: "/lol-collections/v1/inventories", listener: (message: string) => void): this;
-  on(event: "/lol-content-targeting/v1/filters", listener: (message: string) => void): this;
-  on(event: "/lol-content-targeting/v1/protected/filters", listener: (message: string) => void): this;
-  on(event: "/lol-cosmetics/v1/inventories", listener: (message: string) => void): this;
-  on(event: "/lol-end-of-game/v1/eog-stats-block", listener: (message: string) => void): this;
-  on(event: "/lol-end-of-game/v1/gameclient-eog-stats-block", listener: (message: string) => void): this;
-  on(event: "/lol-end-of-game/v1/tft-eog-stats", listener: (message: string) => void): this;
-  on(event: "/lol-game-client-chat/v1/aas-messages", listener: (message: string) => void): this;
-  on(event: "/lol-game-client-chat/v1/buddies", listener: (message: string) => void): this;
-  on(event: "/lol-game-client-chat/v1/instant-messages", listener: (message: string) => void): this;
-  on(event: "/lol-game-client-chat/v1/party-messages", listener: (message: string) => void): this;
-  on(event: "/lol-game-queues/v1/custom", listener: (message: string) => void): this;
-  on(event: "/lol-game-queues/v1/custom-non-default", listener: (message: string) => void): this;
-  on(event: "/lol-game-queues/v1/queues", listener: (message: string) => void): this;
-  on(event: "/lol-game-settings/v1/game-settings", listener: (message: string) => void): this;
-  on(event: "/lol-game-settings/v1/input-settings", listener: (message: string) => void): this;
-  on(event: "/lol-game-settings/v1/ready", listener: (message: string) => void): this;
-  on(event: "/lol-gameflow/v1/active-patcher-lock", listener: (message: string) => void): this;
-  on(event: "/lol-gameflow/v1/availability", listener: (message: string) => void): this;
-  on(event: "/lol-gameflow/v1/battle-training", listener: (message: string) => void): this;
-  on(event: "/lol-gameflow/v1/early-exit-notifications", listener: (message: string) => void): this;
-  on(event: "/lol-gameflow/v1/gameflow-metadata", listener: (message: string) => void): this;
-  on(event: "/lol-gameflow/v1/gameflow-phase", listener: (message: string) => void): this;
-  on(event: "/lol-gameflow/v1/session", listener: (message: string) => void): this;
-  on(event: "/lol-gameflow/v1/spectate", listener: (message: string) => void): this;
-  on(event: "/lol-gameflow/v1/watch", listener: (message: string) => void): this;
-  on(event: "/lol-geoinfo/v1/whereami", listener: (message: string) => void): this;
-  on(event: "/lol-highlights/v1/config", listener: (message: string) => void): this;
-  on(event: "/lol-highlights/v1/highlights-folder-path", listener: (message: string) => void): this;
-  on(event: "/lol-honor-v2/v1/ballot", listener: (message: string) => void): this;
-  on(event: "/lol-honor-v2/v1/config", listener: (message: string) => void): this;
-  on(event: "/lol-honor-v2/v1/late-recognition", listener: (message: string) => void): this;
-  on(event: "/lol-honor-v2/v1/mutual-honor", listener: (message: string) => void): this;
-  on(event: "/lol-honor-v2/v1/profile", listener: (message: string) => void): this;
-  on(event: "/lol-honor-v2/v1/recipients", listener: (message: string) => void): this;
-  on(event: "/lol-honor-v2/v1/recognition", listener: (message: string) => void): this;
-  on(event: "/lol-honor-v2/v1/team-choices", listener: (message: string) => void): this;
-  on(event: "/lol-hovercard/v1/friend-info", listener: (message: string) => void): this;
-  on(event: "/lol-hovercard/v1/friend-info-by-summoner", listener: (message: string) => void): this;
-  on(event: "/lol-inventory/v1/initial-configuration-complete", listener: (message: string) => void): this;
-  on(event: "/lol-inventory/v1/inventory", listener: (message: string) => void): this;
-  on(event: "/lol-inventory/v1/signedInventory", listener: (message: string) => void): this;
-  on(event: "/lol-inventory/v1/signedInventoryCache", listener: (message: string) => void): this;
-  on(event: "/lol-inventory/v1/wallet", listener: (message: string) => void): this;
-  on(event: "/lol-inventory/v2/inventory", listener: (message: string) => void): this;
-  on(event: "/lol-kr-playtime-reminder/v1/message", listener: (message: string) => void): this;
-  on(event: "/lol-league-session/v1/league-session-token", listener: (message: string) => void): this;
-  on(event: "/lol-license-agreement/v1/agreements", listener: (message: string) => void): this;
-  on(event: "/lol-license-agreement/v1/all-agreements", listener: (message: string) => void): this;
-  on(event: "/lol-license-agreement/v1/serve-location", listener: (message: string) => void): this;
-  on(event: "/lol-loadouts/v1/enabled", listener: (message: string) => void): this;
-  on(event: "/lol-loadouts/v1/loadouts-ready", listener: (message: string) => void): this;
-  on(event: "/lol-loadouts/v4/loadout", listener: (message: string) => void): this;
-  on(event: "/lol-loadouts/v4/loadouts", listener: (message: string) => void): this;
-  on(event: "/lol-lobby-team-builder/champ-select/v1", listener: (message: string) => void): this;
-  on(event: "/lol-lobby-team-builder/v1/matchmaking", listener: (message: string) => void): this;
-  on(event: "/lol-lobby/v1/last-queued-lobby", listener: (message: string) => void): this;
-  on(event: "/lol-lobby/v1/lobby", listener: (message: string) => void): this;
-  on(event: "/lol-lobby/v1/parties", listener: (message: string) => void): this;
-  on(event: "/lol-lobby/v2/comms", listener: (message: string) => void): this;
-  on(event: "/lol-lobby/v2/eligibility", listener: (message: string) => void): this;
-  on(event: "/lol-lobby/v2/lobby", listener: (message: string) => void): this;
-  on(event: "/lol-lobby/v2/notifications", listener: (message: string) => void): this;
-  on(event: "/lol-lobby/v2/party-active", listener: (message: string) => void): this;
-  on(event: "/lol-login/v1/login-connection-state", listener: (message: string) => void): this;
-  on(event: "/lol-login/v1/login-data-packet", listener: (message: string) => void): this;
-  on(event: "/lol-login/v1/login-in-game-creds", listener: (message: string) => void): this;
-  on(event: "/lol-login/v1/login-platform-credentials", listener: (message: string) => void): this;
-  on(event: "/lol-login/v1/session", listener: (message: string) => void): this;
-  on(event: "/lol-login/v1/wallet", listener: (message: string) => void): this;
-  on(event: "/lol-login/v2/league-session-init-token", listener: (message: string) => void): this;
-  on(event: "/lol-loot/v1/currency-configuration", listener: (message: string) => void): this;
-  on(event: "/lol-loot/v1/enabled", listener: (message: string) => void): this;
-  on(event: "/lol-loot/v1/loot-grants", listener: (message: string) => void): this;
-  on(event: "/lol-loot/v1/player-display-categories", listener: (message: string) => void): this;
-  on(event: "/lol-loot/v1/player-loot", listener: (message: string) => void): this;
-  on(event: "/lol-loot/v1/player-loot-map", listener: (message: string) => void): this;
-  on(event: "/lol-loot/v1/ready", listener: (message: string) => void): this;
-  on(event: "/lol-loot/v1/recipes", listener: (message: string) => void): this;
-  on(event: "/lol-loot/v2/player-loot-map", listener: (message: string) => void): this;
-  on(event: "/lol-loyalty/v1/status-notification", listener: (message: string) => void): this;
-  on(event: "/lol-maps/v1/maps", listener: (message: string) => void): this;
-  on(event: "/lol-maps/v2/maps", listener: (message: string) => void): this;
-  on(event: "/lol-match-history/v1/recently-played-champions", listener: (message: string) => void): this;
-  on(event: "/lol-match-history/v2/recently-played-champions", listener: (message: string) => void): this;
-  on(event: "/lol-matchmaking/v1/ready-check", listener: (message: string) => void): this;
-  on(event: "/lol-matchmaking/v1/search", listener: (message: string) => void): this;
-  on(event: "/lol-missions/v1/missions", listener: (message: string) => void): this;
-  on(event: "/lol-missions/v1/series", listener: (message: string) => void): this;
-  on(event: "/lol-npe-tutorial-path/v1/rewards", listener: (message: string) => void): this;
-  on(event: "/lol-npe-tutorial-path/v1/settings", listener: (message: string) => void): this;
-  on(event: "/lol-npe-tutorial-path/v1/tutorials", listener: (message: string) => void): this;
-  on(event: "/lol-patch/v1/checking-enabled", listener: (message: string) => void): this;
-  on(event: "/lol-patch/v1/environment", listener: (message: string) => void): this;
-  on(event: "/lol-patch/v1/game-version", listener: (message: string) => void): this;
-  on(event: "/lol-patch/v1/notifications", listener: (message: string) => void): this;
-  on(event: "/lol-patch/v1/products", listener: (message: string) => void): this;
-  on(event: "/lol-patch/v1/status", listener: (message: string) => void): this;
-  on(event: "/lol-perks/v1/currentpage", listener: (message: string) => void): this;
-  on(event: "/lol-perks/v1/customizationlimits", listener: (message: string) => void): this;
-  on(event: "/lol-perks/v1/inventory", listener: (message: string) => void): this;
-  on(event: "/lol-perks/v1/pages", listener: (message: string) => void): this;
-  on(event: "/lol-perks/v1/perks", listener: (message: string) => void): this;
-  on(event: "/lol-perks/v1/schema-version", listener: (message: string) => void): this;
-  on(event: "/lol-perks/v1/servicesettings", listener: (message: string) => void): this;
-  on(event: "/lol-perks/v1/settings", listener: (message: string) => void): this;
-  on(event: "/lol-perks/v1/styles", listener: (message: string) => void): this;
-  on(event: "/lol-personalized-offers/v1/status", listener: (message: string) => void): this;
-  on(event: "/lol-player-behavior/v1/config", listener: (message: string) => void): this;
-  on(event: "/lol-player-preferences/v1/player-preferences-ready", listener: (message: string) => void): this;
-  on(event: "/lol-pre-end-of-game/v1/currentSequenceEvent", listener: (message: string) => void): this;
-  on(event: "/lol-premade-voice/v1/availability", listener: (message: string) => void): this;
-  on(event: "/lol-premade-voice/v1/capturedevices", listener: (message: string) => void): this;
-  on(event: "/lol-premade-voice/v1/first-experience", listener: (message: string) => void): this;
-  on(event: "/lol-premade-voice/v1/participant-records", listener: (message: string) => void): this;
-  on(event: "/lol-premade-voice/v1/settings", listener: (message: string) => void): this;
-  on(event: "/lol-publishing-content/v1/ready", listener: (message: string) => void): this;
-  on(event: "/lol-purchase-widget/v1/configuration", listener: (message: string) => void): this;
-  on(event: "/lol-ranked/v1/current-ranked-stats", listener: (message: string) => void): this;
-  on(event: "/lol-ranked/v1/eos-rewards", listener: (message: string) => void): this;
-  on(event: "/lol-ranked/v1/global-notifications", listener: (message: string) => void): this;
-  on(event: "/lol-ranked/v1/notifications", listener: (message: string) => void): this;
-  on(event: "/lol-ranked/v1/ranked-stats", listener: (message: string) => void): this;
-  on(event: "/lol-ranked/v1/signed-ranked-stats", listener: (message: string) => void): this;
-  on(event: "/lol-ranked/v1/splits-config", listener: (message: string) => void): this;
-  on(event: "/lol-regalia/v2/config", listener: (message: string) => void): this;
-  on(event: "/lol-regalia/v2/summoners", listener: (message: string) => void): this;
-  on(event: "/lol-replays/v1/configuration", listener: (message: string) => void): this;
-  on(event: "/lol-replays/v1/metadata", listener: (message: string) => void): this;
-  on(event: "/lol-replays/v1/rofls", listener: (message: string) => void): this;
-  on(event: "/lol-rewards/v1/grants", listener: (message: string) => void): this;
-  on(event: "/lol-rewards/v1/groups", listener: (message: string) => void): this;
-  on(event: "/lol-rso-auth/v1/authorization", listener: (message: string) => void): this;
-  on(event: "/lol-settings/v1/account", listener: (message: string) => void): this;
-  on(event: "/lol-settings/v1/local", listener: (message: string) => void): this;
-  on(event: "/lol-settings/v2/account", listener: (message: string) => void): this;
-  on(event: "/lol-settings/v2/local", listener: (message: string) => void): this;
-  on(event: "/lol-settings/v2/ready", listener: (message: string) => void): this;
-  on(event: "/lol-shutdown/v1/notification", listener: (message: string) => void): this;
-  on(event: "/lol-simple-dialog-messages/v1/messages", listener: (message: string) => void): this;
-  on(event: "/lol-spectator/v1/spectate", listener: (message: string) => void): this;
-  on(event: "/lol-store/v1/getStoreUrl", listener: (message: string) => void): this;
-  on(event: "/lol-store/v1/store-ready", listener: (message: string) => void): this;
-  on(event: "/lol-store/v1/wallet", listener: (message: string) => void): this;
-  on(event: "/lol-suggested-players/v1/suggested-players", listener: (message: string) => void): this;
-  on(event: "/lol-summoner/v1/current-summoner", listener: (message: string) => void): this;
-  on(event: "/lol-summoner/v1/status", listener: (message: string) => void): this;
-  on(event: "/lol-summoner/v1/summoner-requests-ready", listener: (message: string) => void): this;
-  on(event: "/lol-tastes/v1/ready", listener: (message: string) => void): this;
-  on(event: "/lol-tft/v2/tft", listener: (message: string) => void): this;
-  on(event: "/lol-token-upsell/v1/all", listener: (message: string) => void): this;
-  on(event: "/memory/v1/fe-processes-ready", listener: (message: string) => void): this;
-  on(event: "/patcher/v1/notifications", listener: (message: string) => void): this;
-  on(event: "/patcher/v1/products", listener: (message: string) => void): this;
-  on(event: "/patcher/v1/status", listener: (message: string) => void): this;
-  on(event: "/player-notifications/v1/notifications", listener: (message: string) => void): this;
-  on(event: "/plugin-manager/v1/external-plugins", listener: (message: string) => void): this;
-  on(event: "/plugin-manager/v1/status", listener: (message: string) => void): this;
-  on(event: "/process-control/v1/process", listener: (message: string) => void): this;
-  on(event: "/product-metadata/v2/products", listener: (message: string) => void): this;
-  on(event: "/product-session/v1/external-sessions", listener: (message: string) => void): this;
-  on(event: "/riot-messaging-service/v1/message", listener: (message: string) => void): this;
-  on(event: "/riot-messaging-service/v1/out-of-sync", listener: (message: string) => void): this;
-  on(event: "/riot-messaging-service/v1/session", listener: (message: string) => void): this;
-  on(event: "/riot-messaging-service/v1/state", listener: (message: string) => void): this;
-  on(event: "/riotclient/affinity", listener: (message: string) => void): this;
-  on(event: "/riotclient/get/region/locale", listener: (message: string) => void): this;
-  on(event: "/riotclient/new-args", listener: (message: string) => void): this;
-  on(event: "/riotclient/pre-shutdown/begin", listener: (message: string) => void): this;
-  on(event: "/riotclient/region-locale", listener: (message: string) => void): this;
-  on(event: "/riotclient/region-locale/request", listener: (message: string) => void): this;
-  on(event: "/riotclient/system-info/v1", listener: (message: string) => void): this;
-  on(event: "/riotclient/ux-crash-count", listener: (message: string) => void): this;
-  on(event: "/riotclient/ux-state/request", listener: (message: string) => void): this;
-  on(event: "/riotclient/v1/crash-reporting", listener: (message: string) => void): this;
-  on(event: "/riotclient/zoom-scale", listener: (message: string) => void): this;
-  on(event: "/rso-auth/v1/auth-hints", listener: (message: string) => void): this;
-  on(event: "/rso-auth/v1/session", listener: (message: string) => void): this;
-  on(event: "/rso-auth/v2/authorizations", listener: (message: string) => void): this;
-  on(event: "/sanitizer/v1/status", listener: (message: string) => void): this;
-  on(event: "/scd/v1/cookies", listener: (message: string) => void): this;
-  on(event: "/voice-chat/v1/audio-properties", listener: (message: string) => void): this;
-  on(event: "/voice-chat/v2/devices", listener: (message: string) => void): this;
-  on(event: "/voice-chat/v2/state", listener: (message: string) => void): this;
-  on(event: "/voice-chat/v3/sessions", listener: (message: string) => void): this;
-  on(event: "/voice-chat/v3/settings", listener: (message: string) => void): this;
+  on(event: string, listener: (data: Object) => void): this;
+  on(event: eventUri, listener: (data: Object) => void): this;
 }
 
 class LcuEvents extends EventEmitter {
   constructor() {
-    super()
+    super();
   }
 }
 

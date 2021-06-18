@@ -5,11 +5,6 @@ import LcuEvents from "./events";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-interface Event {
-  data: any;
-  eventType: string;
-  uri: string;
-}
 declare interface wsEvents {
   on(event: string, listener: (message: string) => void): this;
   on(event: "connect", listener: (ws: WebSocket) => void): this;
@@ -76,14 +71,12 @@ class LCU {
 
   private onConnect() {
     this.wsEvents.on("connect", (ws: WebSocket) => {
-      ws.on("open", () => {
-        ws.send(JSON.stringify([5, "OnJsonApiEvent"]));
-      });
+      ws.on("open", () => ws.send(JSON.stringify([5, "OnJsonApiEvent"])));
 
       ws.on("message", (message: string) => {
         if (!message) return;
-        const event: Event = JSON.parse(message)[2];
-        this.events.emit(event.uri, event.data);
+        const eventData = JSON.parse(message)[2];
+        this.events.emit(eventData.uri, eventData.data);
       });
     });
   }

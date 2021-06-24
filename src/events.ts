@@ -1,6 +1,7 @@
 import { EventEmitter } from "stream";
+import { ChampSelectSession, GridChampion, ReadyCheck } from "./types";
 
-declare type eventUri =
+declare type EventUri =
   | "/chat/v1/session"
   | "/chat/v1/settings"
   | "/chat/v3/blocked"
@@ -264,7 +265,9 @@ declare type eventUri =
 
 declare interface LcuEvents {
   on(event: string, listener: (data: Object) => void): this;
-  on(event: eventUri, listener: (data: Object) => void): this;
+  on(event: EventUri, listener: (data: Object) => void): this;
+  on(event: "/lol-matchmaking/v1/ready-check", listener: (readyCheck: ReadyCheck)=> void): this;
+  on(event: "/lol-champ-select/v1/session",listener: (session: ChampSelectSession) => void): this;
 }
 
 class LcuEvents extends EventEmitter {
@@ -273,4 +276,4 @@ class LcuEvents extends EventEmitter {
   }
 }
 
-export default LcuEvents;
+export { LcuEvents, EventUri };

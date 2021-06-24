@@ -1,7 +1,8 @@
 import find from "find-process";
 import { EventEmitter } from "stream";
 import WebSocket from "ws";
-import LcuEvents from "./events";
+import fetch, { RequestInit, Response } from "node-fetch";
+import { LcuEvents, EventUri } from "./events";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -61,7 +62,8 @@ class wsEvents extends EventEmitter {
 }
 
 class LCU {
-  private wsEvents = new wsEvents();
+  private uri?: string;
+  public wsEvents = new wsEvents();
   public events = new LcuEvents();
 
   constructor() {
@@ -69,14 +71,20 @@ class LCU {
     this.onConnect();
   }
 
+  public fetch(eventUri: EventUri, init?: RequestInit): Promise<Response> {
+    return fetch(this.uri + eventUri, init);
+  }
+
   private onConnect() {
     this.wsEvents.on("connect", (ws: WebSocket) => {
+      this.uri = ws.url;
+      console.log(this.uri);
       ws.on("open", () => ws.send(JSON.stringify([5, "OnJsonApiEvent"])));
 
       ws.on("message", (message: string) => {
         if (!message) return;
         const eventData = JSON.parse(message)[2];
-        this.events.emit(eventData.uri, eventData.data);
+        if (eventData.data) this.events.emit(eventData.uri, eventData.data);
       });
     });
   }

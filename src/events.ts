@@ -263,11 +263,22 @@ declare type EventUri =
   | "/voice-chat/v3/sessions"
   | "/voice-chat/v3/settings";
 
+type EventType = "Update" | "Create" | "Delete";
+
 declare interface LcuEvents {
-  on(event: string, listener: (data: Object) => void): this;
-  on(event: EventUri, listener: (data: Object) => void): this;
-  on(event: "/lol-matchmaking/v1/ready-check", listener: (readyCheck: ReadyCheck)=> void): this;
-  on(event: "/lol-champ-select/v1/session",listener: (session: ChampSelectSession) => void): this;
+  on(event: string, listener: (data: any, eventType: EventType) => void): this;
+  on(
+    event: EventUri,
+    listener: (data: any, eventType: EventType) => void
+  ): this;
+  on(
+    event: "/lol-matchmaking/v1/ready-check",
+    listener: (readyCheck: ReadyCheck, eventType: EventType) => void
+  ): this;
+  on(
+    event: "/lol-champ-select/v1/session",
+    listener: (session: ChampSelectSession, eventType: EventType) => void
+  ): this;
 }
 
 class LcuEvents extends EventEmitter {

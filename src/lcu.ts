@@ -78,13 +78,13 @@ class LCU {
   private onConnect() {
     this.wsEvents.on("connect", (ws: WebSocket) => {
       this.uri = ws.url;
-      console.log(this.uri);
       ws.on("open", () => ws.send(JSON.stringify([5, "OnJsonApiEvent"])));
 
       ws.on("message", (message: string) => {
         if (!message) return;
         const eventData = JSON.parse(message)[2];
-        if (eventData.data) this.events.emit(eventData.uri, eventData.data);
+        if (eventData.data)
+          this.events.emit(eventData.uri, eventData.data, eventData.eventType);
       });
     });
   }
